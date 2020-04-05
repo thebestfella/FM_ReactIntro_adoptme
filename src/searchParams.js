@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { ANIMALS } from "@frontendmasters/pet";
+import React, { useState, useEffect } from "react";
+import pet, { ANIMALS } from "@frontendmasters/pet";
 import useDropdown from "./useDropdown";
 
 const SearchParams = () => {
@@ -11,10 +11,29 @@ const SearchParams = () => {
 
   const [location, setLocation] = useState("Seattle WA");
   //const [animal, setAnimal] = useState("dog");
-  const [breeds, setBreeds] = useState([]);
+  const [breeds, setBreeds] = useState([]); //the breeds list
   const [animal, AnimalDropdown] = useDropdown("Animal", "dog", ANIMALS);
   //const [breed, setBreed] = useState("");
-  const [breed, BreedDropdown] = useDropdown("Breed", "", breeds);
+  const [breed, BreedDropdown, setBreed] = useDropdown("Breed", "", breeds);
+  console.log("SearchParams");
+
+  //scheduling to run after render happens, after searchparams runs, useeffect runs
+  //because it allows user to see something(rendering) and make calls
+  useEffect(() => {
+    console.log("useEffect");
+    //success to console, otherwise to error
+    setBreeds([]);
+    setBreed("");
+
+    pet.breeds(animal).then(
+      ({ breeds }) => {
+        const breedStr = breeds.map(({ name }) => name);
+        setBreeds(breedStr);
+      },
+      (error) => console.error(error)
+    );
+    //and only if Animal change the API will be made
+  }, [animal, setBreed, setBreeds]);
 
   return (
     <div className="search-params">
