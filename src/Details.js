@@ -1,6 +1,7 @@
 import React from "react";
 import pet from "@frontendmasters/pet";
 import Carousel from "./Carousel";
+import ErrorBoundary from "./ErrorBoundary";
 
 class Details extends React.Component {
   state = { loading: true };
@@ -14,6 +15,7 @@ class Details extends React.Component {
   }*/
   //only run once when the class first got created
   componentDidMount() {
+    //throw new Error("lol");
     //receives {animal} from api
     pet.animal(+this.props.id).then(({ animal }) => {
       this.setState({
@@ -45,7 +47,18 @@ class Details extends React.Component {
     );
   }
 }
-export default Details;
+//export default Details;
+
+export default function DetailsWithErrorBoundary(props) {
+  //not sure why returns ...props, but it has something to do with the
+  //props data needs to be passed to details
+
+  return (
+    <ErrorBoundary>
+      <Details {...props}></Details>
+    </ErrorBoundary>
+  );
+}
 
 /*
 const Details = (props) => {
